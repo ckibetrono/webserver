@@ -1,4 +1,6 @@
 defmodule Webserver.Handler do
+  alias Webserver.Conv
+
   @moduledoc """
   Handles HTTP requests.
   """
@@ -22,26 +24,26 @@ defmodule Webserver.Handler do
     |> format_response
   end
 
-  def route(%{method: "GET", path: "/templates"} = conv) do
+  def route(%Conv{method: "GET", path: "/templates"} = conv) do
     %{conv | status: 200, resp_body: "Finance, Economics, Accounting"}
   end
 
-  def route(%{method: "GET", path: "/finance"} = conv) do
+  def route(%Conv{method: "GET", path: "/finance"} = conv) do
     %{conv | status: 200, resp_body: "Personal finance, Public finance, Corporate finance"}
   end
 
-  def route(%{method: "GET", path: "/finance" <> id} = conv) do
+  def route(%Conv{method: "GET", path: "/finance" <> id} = conv) do
     %{conv | status: 200, resp_body: "Finance #{id}"}
   end
 
-  def route(%{method: "GET", path: "/about"} = conv) do
+  def route(%Conv{method: "GET", path: "/about"} = conv) do
     @pages_path
     |> Path.join("about.html")
     |> File.read()
     |> handle_file(conv)
   end
 
-  def route(%{path: path} = conv) do
+  def route(%Conv{path: path} = conv) do
     %{conv | status: 404, resp_body: "No #{path} here for #{conv.method} request!"}
   end
 
@@ -57,26 +59,15 @@ defmodule Webserver.Handler do
     %{conv | status: 500, resp_body: "File error: #{reason}"}
   end
 
-  def format_response(conv) do
+  def format_response(%Conv{} = conv) do
     # TODO: Use values in the map to create an HTTP response string:
     """
-    HTTP/1.1 #{conv.status} #{status_reason(conv.status)}
+    HTTP/1.1 #{Conv.full_status(conv)}
     Content-Type: text/html
     Content-Length: #{String.length(conv.resp_body)}
     
     #{conv.resp_body}
     """
-  end
-
-  defp status_reason(code) do
-    %{
-      200 => "OK",
-      201 => "Created",
-      401 => "Unauthorized",
-      403 => "Forbidden",
-      404 => "Not Found",
-      500 => "Internal Server Error"
-    }[code]
   end
 end
 
