@@ -32,8 +32,19 @@ defmodule Webserver.Handler do
     %{conv | status: 200, resp_body: "Personal finance, Public finance, Corporate finance"}
   end
 
-  def route(%Conv{method: "GET", path: "/finance" <> id} = conv) do
+  def route(%Conv{method: "GET", path: "/finance/" <> id} = conv) do
     %{conv | status: 200, resp_body: "Finance #{id}"}
+  end
+
+  # name=Risk&type=Return
+  def route(%Conv{method: "POST", path: "/finance"} = conv) do
+    params = %{"name" => "Risk", "type" => "Return"}
+
+    %{
+      conv
+      | status: 201,
+        resp_body: "Created a #{params["type"]} template named #{params["name"]}"
+    }
   end
 
   def route(%Conv{method: "GET", path: "/about"} = conv) do
@@ -65,7 +76,7 @@ defmodule Webserver.Handler do
     HTTP/1.1 #{Conv.full_status(conv)}
     Content-Type: text/html
     Content-Length: #{String.length(conv.resp_body)}
-    
+
     #{conv.resp_body}
     """
   end
@@ -137,6 +148,21 @@ Host: example.com
 User-Agent: ExampleBrowser/1.0
 Accept: */*
 
+"""
+
+response = Webserver.Handler.handle(request)
+
+IO.puts(response)
+
+request = """
+POST /finance HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 21
+
+name=Risk&type=Return
 """
 
 response = Webserver.Handler.handle(request)
