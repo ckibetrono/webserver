@@ -12,7 +12,7 @@ defmodule Webserver.Plugins do
   def track(%Conv{} = conv), do: conv
 
   def rewrite_path(%Conv{path: "/math"} = conv) do
-    %{conv | path: "/finance"}
+    %{conv | path: "/templates"}
   end
 
   def rewrite_path(%Conv{} = conv), do: conv

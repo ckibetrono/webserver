@@ -32,18 +32,16 @@ defmodule Webserver.Handler do
     %{conv | status: 200, resp_body: "Personal finance, Public finance, Corporate finance"}
   end
 
-  def route(%Conv{method: "GET", path: "/finance/" <> id} = conv) do
-    %{conv | status: 200, resp_body: "Finance #{id}"}
+  def route(%Conv{method: "GET", path: "/templates/" <> id} = conv) do
+    %{conv | status: 200, resp_body: "Template #{id}"}
   end
 
   # name=Risk&type=Return
-  def route(%Conv{method: "POST", path: "/finance"} = conv) do
-    params = %{"name" => "Risk", "type" => "Return"}
-
+  def route(%Conv{method: "POST", path: "/templates"} = conv) do
     %{
       conv
       | status: 201,
-        resp_body: "Created a #{params["type"]} template named #{params["name"]}"
+        resp_body: "Created a #{conv.params["type"]} template named #{conv.params["name"]}"
     }
   end
 
@@ -83,79 +81,7 @@ defmodule Webserver.Handler do
 end
 
 request = """
-GET /templates HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Webserver.Handler.handle(request)
-
-IO.puts(response)
-
-request = """
-GET /finance/1 HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Webserver.Handler.handle(request)
-
-IO.puts(response)
-
-request = """
-GET /economics HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Webserver.Handler.handle(request)
-
-IO.puts(response)
-
-request = """
-GET /math HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Webserver.Handler.handle(request)
-
-IO.puts(response)
-
-request = """
-GET /mathformulas HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Webserver.Handler.handle(request)
-
-IO.puts(response)
-
-request = """
-GET /about HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Webserver.Handler.handle(request)
-
-IO.puts(response)
-
-request = """
-POST /finance HTTP/1.1
+POST /templates HTTP/1.1
 Host: example.com
 User-Agent: ExampleBrowser/1.0
 Accept: */*
