@@ -1,5 +1,6 @@
 defmodule Webserver.Handler do
   alias Webserver.Conv
+  alias Webserver.TemplatesController
 
   @moduledoc """
   Handles HTTP requests.
@@ -25,7 +26,7 @@ defmodule Webserver.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/templates"} = conv) do
-    %{conv | status: 200, resp_body: "Finance, Economics, Accounting"}
+    TemplatesController.index(conv)
   end
 
   def route(%Conv{method: "GET", path: "/finance"} = conv) do
@@ -33,16 +34,13 @@ defmodule Webserver.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/templates/" <> id} = conv) do
-    %{conv | status: 200, resp_body: "Template #{id}"}
+    params = Map.put(conv.params, "id", id)
+    TemplatesController.show(conv, params)
   end
 
   # name=Risk&type=Return
   def route(%Conv{method: "POST", path: "/templates"} = conv) do
-    %{
-      conv
-      | status: 201,
-        resp_body: "Created a #{conv.params["type"]} template named #{conv.params["name"]}"
-    }
+    TemplatesController.create(conv, conv.params)
   end
 
   def route(%Conv{method: "GET", path: "/about"} = conv) do
@@ -89,6 +87,30 @@ Content-Type: application/x-www-form-urlencoded
 Content-Length: 21
 
 name=Risk&type=Return
+"""
+
+response = Webserver.Handler.handle(request)
+
+IO.puts(response)
+
+request = """
+GET /templates/1 HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
+
+"""
+
+response = Webserver.Handler.handle(request)
+
+IO.puts(response)
+
+request = """
+GET /templates HTTP/1.1
+Host: example.com
+User-Agent: ExampleBrowser/1.0
+Accept: */*
+
 """
 
 response = Webserver.Handler.handle(request)
