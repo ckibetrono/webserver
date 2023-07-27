@@ -1,6 +1,6 @@
 defmodule Webserver.Handler do
   alias Webserver.Conv
-  alias Webserver.TemplatesController
+  alias Webserver.BlueprintsController
 
   @moduledoc """
   Handles HTTP requests.
@@ -26,7 +26,7 @@ defmodule Webserver.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/templates"} = conv) do
-    TemplatesController.index(conv)
+    BlueprintsController.index(conv)
   end
 
   def route(%Conv{method: "GET", path: "/finance"} = conv) do
@@ -35,12 +35,12 @@ defmodule Webserver.Handler do
 
   def route(%Conv{method: "GET", path: "/templates/" <> id} = conv) do
     params = Map.put(conv.params, "id", id)
-    TemplatesController.show(conv, params)
+    BlueprintsController.show(conv, params)
   end
 
   # name=Risk&type=Return
   def route(%Conv{method: "POST", path: "/templates"} = conv) do
-    TemplatesController.create(conv, conv.params)
+    BlueprintsController.create(conv, conv.params)
   end
 
   def route(%Conv{method: "GET", path: "/about"} = conv) do

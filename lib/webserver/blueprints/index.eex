@@ -1,0 +1,9 @@
+<h1>All the Templates!</h1>
+
+<ul>
+  <%= for blueprint <- blueprints do %>
+  <li><%= blueprint.name %> - <%= blueprint.category%></li>
+  <% end %>
+</ul>
+
+<%= inspect(blueprints)  %>
