@@ -1,4 +1,4 @@
 <h1>Show Template</h1>
 <p>
-  Is <%= blueprint.name %> displaying: <strong><%= blueprint.display%></strong>
+  Is <%= blueprint.name %> displaying? <strong><%= blueprint.display%></strong>
 </p>

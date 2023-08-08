@@ -5,4 +5,8 @@ defmodule WebserverTest do
   test "greets the world" do
     assert Webserver.hello() == :world
   end
+
+  test "the truth" do
+    assert 1 + 1 == 2
+  end
 end

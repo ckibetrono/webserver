@@ -27,11 +27,11 @@ defmodule Webserver.BlueprintsController do
     render(conv, "show.eex", blueprint: blueprint)
   end
 
-  def create(conv, %{"name" => name, "type" => type}) do
+  def create(conv, %{"name" => name, "category" => category}) do
     %{
       conv
       | status: 201,
-        resp_body: "Created a #{type} template named #{name}"
+        resp_body: "Created a #{category} template named #{name}"
     }
   end
 end

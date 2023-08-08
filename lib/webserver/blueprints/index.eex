@@ -5,5 +5,3 @@
   <li><%= blueprint.name %> - <%= blueprint.category%></li>
   <% end %>
 </ul>
-
-<%= inspect(blueprints)  %>
